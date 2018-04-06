@@ -1,32 +1,20 @@
 <template>
     <div>
-    <v-toolbar color="blue">
-        <v-toolbar-side-icon></v-toolbar-side-icon>
-        <v-toolbar-title>Риэлторы</v-toolbar-title>
-        <v-spacer></v-spacer>
-        <v-toolbar-items class="hidden-sm-and-down">
-        <v-btn flat>Список</v-btn>
-        <v-btn flat>Новый</v-btn>
-        
-        
-            <v-flex xs8>
-                <v-text-field name="search" label="Поиск" id="searching"></v-text-field>
-            </v-flex>
-            <v-btn flat>Искать
-            </v-btn>
-        
-
-        </v-toolbar-items>
-    </v-toolbar>
-
     <v-data-table :items="realtorsList" hide-headers disable-initial-sort>
-        <template slot="items" slot-scope="props" :filter="filter(props.item, inputText)" } >
+        <template slot="items" slot-scope="props" @dblclick="edit(props.item.id)" >
             <td class="text-xs-center">{{ props.item.id }}</td>
             <td class="text-xs-center">{{ props.item.firstName }}</td>
             <td class="text-xs-center">{{ props.item.lastName }}</td>
             <td class="text-xs-center">{{ props.item.subDivision }}</td>
             <td class="text-xs-center">{{ props.item.registratingDate }}</td>
         </template>
+        <!-- <tr v-for="item in realtorsList" :key="item.id">
+            <td> {{ item.id }} </td>
+            <td> {{ item.lastName }} </td>
+            <td> {{ item.firstName }} </td>
+            <td> {{ item.subDivision }} </td>
+            <td> {{ item.registrationDate }} </td>
+        </tr> -->
     </v-data-table>
 
     <input type="text" placeholder="azazaza" v-model="inputText">
@@ -83,6 +71,9 @@
                 if(item.firstName.toLowerCase().includes(inputText.toLowerCase())){
                     return true
                 }
+            },
+            edit (id) {
+                this.$router.push('/edit/' + id)
             }
         },
         components: { 'itemedit': ItemEdit

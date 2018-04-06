@@ -1,10 +1,13 @@
 <template>
     <v-app>
-        <realtors></realtors>
+        <topbar></topbar>
+        <router-view></router-view>
     </v-app>
 </template>
 
 <script>
+import Topbar from './Topbar'
+import EditRealtor from './EditRealtor'
 
 export default {
     data() { 
@@ -15,6 +18,7 @@ export default {
 
     },
     components: {
+        Topbar, EditRealtor
     }
 }
 </script>
