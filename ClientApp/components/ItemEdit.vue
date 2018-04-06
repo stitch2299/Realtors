@@ -5,7 +5,7 @@
         <input type="text" name="lastName" id="" v-model="test3">       
         <input type="text" name="subDivision" id="" v-model="test4">       
         <input type="text" name="registrationDate" id="" v-model="test5"> -->
-        <button @click="submitChanges"> kek </button>
+        <button @click="submitChanges"> cheburek </button>
     </div>
 </template>
 
