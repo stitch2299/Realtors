@@ -1,23 +1,28 @@
 <template>
     <div>
-    <v-data-table :items="realtorsList" hide-headers disable-initial-sort>
-        <template slot="items" slot-scope="props" @dblclick="edit(props.item.id)" >
-            <td class="text-xs-center">{{ props.item.id }}</td>
-            <td class="text-xs-center">{{ props.item.firstName }}</td>
-            <td class="text-xs-center">{{ props.item.lastName }}</td>
-            <td class="text-xs-center">{{ props.item.subDivision }}</td>
-            <td class="text-xs-center">{{ props.item.registratingDate }}</td>
-        </template>
-        <!-- <tr v-for="item in realtorsList" :key="item.id">
-            <td> {{ item.id }} </td>
-            <td> {{ item.lastName }} </td>
-            <td> {{ item.firstName }} </td>
-            <td> {{ item.subDivision }} </td>
-            <td> {{ item.registrationDate }} </td>
-        </tr> -->
-    </v-data-table>
 
-    <input type="text" placeholder="azazaza" v-model="inputText">
+    <table class="table table-bordered table-hover">
+        <thead class="thead-light">
+            <tr class="text-center">
+                <th class="align-middle header qwe">Id</th>
+                <th class="align-middle header">Фамилия</th>
+                <th class="align-middle header">Имя</th>
+                <th class="align-middle header">Подразделение</th>
+                <th class="align-middle header">Дата регистрации</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="text-center" v-for="item in realtorsList" :key="item.id" @dblclick="edit(item.id)">
+                <td class="align-middle"> {{ item.id }} </td>
+                <td class="align-middle"> {{ item.lastName }} </td>
+                <td class="align-middle"> {{ item.firstName }} </td>
+                <td class="align-middle"> {{ item.subDivision }} </td>
+                <td class="align-middle"> {{ item.registrationDate }} </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- <input type="text" placeholder="azazaza" v-model="inputText"> -->
     </div>
 </template>
 
@@ -74,13 +79,18 @@
             },
             edit (id) {
                 this.$router.push('/edit/' + id)
-            }
+            },
         },
         components: { 'itemedit': ItemEdit
         }
     }
 </script>
 
-<style>
-
+<style scoped>
+    .qwe {
+        width:35px;
+    }
+    .header {
+        font-size: 16px;
+    }
 </style>

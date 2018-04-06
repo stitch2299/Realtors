@@ -1,7 +1,9 @@
 <template>
     <v-app>
         <topbar></topbar>
-        <router-view></router-view>
+        <div id="mainContent">
+            <router-view></router-view>
+        </div>
     </v-app>
 </template>
 
@@ -24,5 +26,9 @@ export default {
 </script>
 
 <style>
-
+    #mainContent {
+        width: 1200px;
+        margin:auto;
+        margin-top: 40px;
+    }
 </style>

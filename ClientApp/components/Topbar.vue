@@ -4,7 +4,7 @@
         <v-toolbar-title>Риэлторы</v-toolbar-title>
         <v-spacer></v-spacer>
         <v-toolbar-items class="hidden-sm-and-down">
-        <v-btn flat>Список</v-btn>
+        <v-btn flat @click="toMain">Список</v-btn>
         <v-btn flat>Новый</v-btn>
         
         
@@ -23,7 +23,12 @@
     export default {
         data: () => ({
 
-        })
+        }),
+        methods: {
+            toMain(){
+                this.$router.push('/')
+            }
+        }
     }
 </script>
 

@@ -21,7 +21,7 @@ module.exports = () => {
       ]
     },
     entry: {
-      vendor: ['vuetify', 'vuetify/dist/vuetify.min.css', 'mdi/css/materialdesignicons.css', 'event-source-polyfill', 'vue', 'vuex', 'axios', 'vue-router', 'jquery']
+      vendor: ['bootstrap', 'bootstrap/dist/css/bootstrap.css', 'vuetify', 'vuetify/dist/vuetify.min.css', 'mdi/css/materialdesignicons.css', 'event-source-polyfill', 'vue', 'vuex', 'axios', 'vue-router', 'jquery']
     },
     output: {
       path: path.join(__dirname, 'wwwroot', 'dist'),
