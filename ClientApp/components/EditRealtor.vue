@@ -5,8 +5,22 @@
         <v-text-field label="Имя" v-model="rFirstName" :rules="firstNameRules"  required></v-text-field>
         <v-select label="Подразделение" v-model="rSubDivision" :rules="subDivisionRules" :items="divisions" required autocomplete></v-select>
         <v-text-field label="Дата регистрации" v-model="rRegistrationDate" :rules="registrationDateRules" required></v-text-field>
-        <v-date-picker v-model="rRegistrationDate" year-icon="mdi-calendar-blank" prev-icon="mdi-skip-previous" next-icon="mdi-skip-next" first-day-of-week=1 ></v-date-picker>
-        <v-btn @click="submit" :disabled="!valid" color="success">Сохранить изменения</v-btn>
+
+        <v-layout row justify-center>
+            <v-date-picker v-model="rRegistrationDate" year-icon="mdi-calendar-blank" prev-icon="mdi-skip-previous" next-icon="mdi-skip-next" first-day-of-week=1 ></v-date-picker>
+            <v-btn @click="submit" :disabled="!valid" color="success">Сохранить изменения</v-btn>
+            <v-btn color="error" dark @click.stop="dialog=true">Удалить риэлтора</v-btn>
+            <v-dialog v-model="dialog" max-width="500px" persistent>
+                <v-card>
+                    <v-card-title>Данное действие необратимо. Вы уверены, что хотите удалить запись о выбранном риэлторе?
+                    </v-card-title>
+                    <v-card-text>
+                        <v-btn color="primary" flat @click.stop="cancelDelete">Нет</v-btn>
+                        <v-btn color="primary" @click.stop="confirmDelete" dark>Уверен</v-btn>
+                    </v-card-text>
+                </v-card>
+            </v-dialog>
+        </v-layout>
     </v-form>
     </div>
 </template>
@@ -42,6 +56,7 @@
 
                 ],
                 valid: false,
+                dialog: false,
                 rLastName: '',
                 rFirstName: '',
                 rSubDivision: '',
@@ -73,9 +88,16 @@
         methods: {
             submit() {
                 if (this.$refs.form.validate()){
-                    console.log(this)
+                    this.$router.push('/')
                 }
             },
+            cancelDelete () {
+                this.dialog=false;
+            },
+            confirmDelete () {
+                this.dialog=false;
+                this.$router.push('/')
+            }
         },
         computed: {
             isOnlyWords() {
@@ -87,7 +109,5 @@
 </script>
 
 <style scoped>
-    .btn {
-        float:right;
-    }
+
 </style>

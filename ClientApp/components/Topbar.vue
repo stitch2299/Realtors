@@ -8,7 +8,7 @@
         
         
         <v-flex xs8>
-        <v-text-field name="search" label="Поиск" id="searching" v-model="searchString"></v-text-field>
+        <v-text-field @keypress.enter="toSearch(searchString)" name="search" label="Поиск" id="searching" v-model="searchString"></v-text-field>
         </v-flex>
         <v-btn flat @click="toSearch(searchString)">Искать
         </v-btn>
