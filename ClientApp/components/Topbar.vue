@@ -1,11 +1,10 @@
 <template>
-    <v-toolbar color="blue">
-        <v-toolbar-side-icon></v-toolbar-side-icon>
-        <v-toolbar-title>Риэлторы</v-toolbar-title>
+    <v-toolbar class="toolbar">
+        <v-toolbar-title @click="toMain">Риэлторы</v-toolbar-title>
         <v-spacer></v-spacer>
         <v-toolbar-items class="hidden-sm-and-down">
-        <v-btn flat @click="toMain">Список</v-btn>
-        <v-btn flat>Новый</v-btn>
+        <v-btn flat @click="toList">Список</v-btn>
+        <v-btn flat @click="toNew">Новый</v-btn>
         
         
         <v-flex xs8>
@@ -25,13 +24,25 @@
 
         }),
         methods: {
-            toMain(){
+            toMain() {
                 this.$router.push('/')
+            },
+            toList() {
+                this.$router.push('/list')
+            },
+            toNew() {
+                this.$router.push('/new')
             }
         }
     }
 </script>
 
 <style scoped>
-
+    .toolbar__title {
+        font-size: 24px;
+    }
+    .toolbar {
+        font-family: "Comic Sans MS", "Comic Sans", cursive;
+        background-color: rgb(98, 166, 255);
+    }
 </style>

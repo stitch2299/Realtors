@@ -10,6 +10,7 @@
 <script>
 import Topbar from './Topbar'
 import EditRealtor from './EditRealtor'
+import NewRealtor from './NewRealtor'
 
 export default {
     data() { 
@@ -20,7 +21,7 @@ export default {
 
     },
     components: {
-        Topbar, EditRealtor
+        Topbar, EditRealtor, NewRealtor
     }
 }
 </script>
