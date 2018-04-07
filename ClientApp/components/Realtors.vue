@@ -13,7 +13,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr v-for="item in realtorsList" :key="item.id" @dblclick="edit(item.id)">
+            <tr v-for="item in realtorsList" v-if="filterByName(item, inputText)" :key="item.id" @dblclick="edit(item.id)">
                 <td> {{ item.id }} </td>
                 <td> {{ item.lastName }} </td>
                 <td> {{ item.firstName }} </td>
@@ -23,8 +23,7 @@
             </tr>
         </tbody>
     </table>
-
-    <!-- <input type="text" placeholder="azazaza" v-model="inputText"> -->
+    
     </div>
 </template>
 
@@ -52,7 +51,6 @@
                 ],
                 buttonText: 'Скрыть',
                 realtorsShow: true,
-                id: "1", firstName: "2", lastName: "3", subDivision: "4", registrationDate: "5", inputText: "", input: '',
                 divisions: { 1 : 'Росич', 2: 'Урал', 3: 'Эдельвейс', 4: 'Меркурий', 5: 'Кузбасс'}
             }
         },
@@ -67,16 +65,33 @@
                     this.realtorsShow = true;
                 }
             },
-            filter (item, inputText) { 
-                if(item.firstName.toLowerCase().includes(inputText.toLowerCase())){
+            filterByName (item, inputText) {
+                if(item.lastName.toLowerCase().includes(inputText.toLowerCase())) {
                     return true
                 }
+                else
+                    if(item.firstName.toLowerCase().includes(inputText.toLowerCase())) {
+                        return true
+                    }
+                    else
+                        if(this.divisions[item.subDivision].toLowerCase().includes(inputText.toLowerCase())) {
+                            return true
+                        }
             },
             edit (id) {
                 this.$router.push('/edit/' + id)
             },
         },
         components: { 
+        },
+        computed: {
+            inputText () {
+                if(this.$route.params.searchString){
+                    return this.$route.params.searchString
+                }
+                else
+                    return ''
+            }
         }
     }
 </script>

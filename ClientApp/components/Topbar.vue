@@ -8,9 +8,9 @@
         
         
         <v-flex xs8>
-        <v-text-field name="search" label="Поиск" id="searching"></v-text-field>
+        <v-text-field name="search" label="Поиск" id="searching" v-model="searchString"></v-text-field>
         </v-flex>
-        <v-btn flat>Искать
+        <v-btn flat @click="toSearch(searchString)">Искать
         </v-btn>
         
 
@@ -21,6 +21,7 @@
 <script>
     export default {
         data: () => ({
+            searchString: ''
 
         }),
         methods: {
@@ -32,6 +33,9 @@
             },
             toNew() {
                 this.$router.push('/new')
+            },
+            toSearch(ss) {
+                this.$router.push('/search/' + ss)
             }
         }
     }

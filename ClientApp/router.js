@@ -13,7 +13,8 @@ export default new Router ({
         { path: '/', component: Realtors },
         { path: '/edit/:id', component: EditRealtor },
         { path: '/list', component: Realtors },
-        { path: '/new', component: NewRealtor }
+        { path: '/new', component: NewRealtor },
+        { path: '/search/:searchString?', component: Realtors }
         // { path: '/edit/:id',  component: EditRealtor }
         // '/edit/' + id 
     ]
