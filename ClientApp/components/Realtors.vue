@@ -1,28 +1,15 @@
 <template>
     <div>
-
-    <table class="realTable">
-        <thead>
-            <tr>
-                <th class="header">Id</th>
-                <th class="header">Фамилия</th>
-                <th class="header">Имя</th>
-                <th class="header">Код подразделения</th>
-                <th class="header">Подразделение</th>
-                <th class="header">Дата регистрации</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr v-for="item in realtorsList" v-if="filterByName(item, inputText)" :key="item.id" @dblclick="edit(item.id)">
-                <td> {{ item.id }} </td>
-                <td> {{ item.lastName }} </td>
-                <td> {{ item.firstName }} </td>
-                <td> {{ item.subDivision }} </td>
-                <td> {{ divisions[item.subDivision] }} </td>
-                <td> {{ item.registrationDate }} </td>
-            </tr>
-        </tbody>
-    </table>
+        <v-text-field v-model="search" class="lastNameFilter" name="lastNameFilter" label="Отфильтровать по фамилии:"></v-text-field>
+        <v-data-table :items="realtorsList" :headers="headers" :search="search" class="elevation-1" :custom-filter="customFilter" disable-initial-sort>
+        <tr slot="items" slot-scope="props" @dblclick="edit(props.item.id)">
+            <td> {{ props.item.id }} </td>
+            <td> {{ props.item.lastName }} </td>
+            <td> {{ props.item.firstName }} </td>
+            <td> {{ divisions[props.item.subDivision] }} </td>
+            <td> {{ props.item.registrationDate }} </td>
+        </tr>
+        </v-data-table>
     
     </div>
 </template>
@@ -49,10 +36,19 @@
                     { id: 15, firstName:'Магамед', lastName:'Магамедов', subDivision:4, registrationDate:'2014-03-25'},
                     { id: 16, firstName:'Константин', lastName:'Шишка', subDivision:4, registrationDate:'2015-12-21'},
                 ],
-                buttonText: 'Скрыть',
+                buttonText: 'Скрыть', 
                 realtorsShow: true,
-                divisions: { 1 : 'Росич', 2: 'Урал', 3: 'Эдельвейс', 4: 'Меркурий', 5: 'Кузбасс'}
-            }
+                search: '',
+                headers: [
+                    { text: 'Id', sortable: false },
+                    { text: 'Имя', sortable: false },
+                    { text: 'Фамилия', sortable: false },
+                    { text: 'Подразделение', sortable: false },
+                    { text: 'Дата регистрации', sortable: false }
+                ],
+                divisions: { 1 : 'Росич', 2: 'Урал', 3: 'Эдельвейс', 4: 'Меркурий', 5: 'Кузбасс'},
+
+            }   
         },
         methods: {
             toggleTable() {
@@ -65,27 +61,29 @@
                     this.realtorsShow = true;
                 }
             },
-            filterByName (item, inputText) {
-                if(item.lastName.toLowerCase().includes(inputText.toLowerCase())) {
+            filterBySearch (item, searchInput) {
+                if(item.lastName.toLowerCase().includes(searchInput.toLowerCase())) {
                     return true
+                }else if(item.firstName.toLowerCase().includes(searchInput.toLowerCase())) {
+                    return true
+                } else if(this.divisions[item.subDivision].toLowerCase().includes(searchInput.toLowerCase())) {
+                         return true
                 }
-                else
-                    if(item.firstName.toLowerCase().includes(inputText.toLowerCase())) {
-                        return true
-                    }
-                    else
-                        if(this.divisions[item.subDivision].toLowerCase().includes(inputText.toLowerCase())) {
-                            return true
-                        }
             },
-            edit (id) {
+            edit(id) {
                 this.$router.push('/edit/' + id)
             },
+            customFilter(items, search, filter) {
+                search = search.toString().toLowerCase()
+                return items.filter(row => filter(row["lastName"], search));
+
+            }
+
         },
         components: { 
         },
         computed: {
-            inputText () {
+            searchInput () {
                 if(this.$route.params.searchString){
                     return this.$route.params.searchString
                 }
@@ -97,63 +95,4 @@
 </script>
 
 <style scoped>
-    .realTable {
-    width: 1000px;
-	font-family:Arial, Helvetica, sans-serif;
-	color:rgb(0, 0, 0);
-	font-size:14px;
-	text-shadow: 1px 1px 0px rgb(245, 245, 245);
-	background:rgb(131, 131, 131);
-	margin:auto;
-	border:#ccc 1px solid;
-	border-collapse:separate;
-
-	border-radius:3px;
-
-	box-shadow: 0 1px 2px #d1d1d1;
-}
- 
-.realTable th {
-    font-size: 16px;
-	padding:20px 25px;
-	border-top:1px solid #fafafa;
-	border-bottom:1px solid #e0e0e0;
- 
-	background: rgb(197, 224, 255);
-}
-.realTable th:first-child{
-	text-align: center;
-}
-.realTable tr:first-child th:first-child{
-	border-top-left-radius:3px;
-}
-.realTable tr:first-child th:last-child{
-	border-top-right-radius:3px;
-}
-.realTable tr{
-	text-align: center;
-}
-.realTable tr td:first-child{
-	text-align: center;
-    width: 30px;
-	border-left: 0;
-}
-.realTable tr td {
-	padding:7px 15px 7px 15px;
-	border-top: 1px solid #ffffff;
-	border-bottom:1px solid #e0e0e0;
-	border-left: 1px solid #e0e0e0;
- 
-	background: #e2f1fd;
-}
-/* .realTable tr:nth-child(even) td{
-	background: rgb(239, 253, 255);
-} */
-.realTable tr:last-child td{
-	border-bottom:0;
-}
-.realTable tr:hover td{
-	background: rgb(255, 200, 137);
-}
- 
 </style>

@@ -36,6 +36,7 @@
             },
             toSearch(ss) {
                 this.$router.push('/search/' + ss)
+                this.searchString = ''
             }
         }
     }
@@ -44,6 +45,7 @@
 <style scoped>
     .toolbar__title {
         font-size: 24px;
+        cursor: pointer;
     }
     .toolbar {
         font-family: "Comic Sans MS", "Comic Sans", cursive;

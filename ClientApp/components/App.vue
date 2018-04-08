@@ -11,7 +11,6 @@
 import Topbar from './Topbar'
 import EditRealtor from './EditRealtor'
 import NewRealtor from './NewRealtor'
-import AreYouSureAboutThat from './AreYouSureAboutThat'
 
 export default {
     data() { 
@@ -22,7 +21,7 @@ export default {
 
     },
     components: {
-        Topbar, EditRealtor, NewRealtor, AreYouSureAboutThat
+        Topbar, EditRealtor, NewRealtor
     }
 }
 </script>
