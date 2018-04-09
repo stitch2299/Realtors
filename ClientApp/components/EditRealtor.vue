@@ -3,7 +3,7 @@
     <v-form ref="form">
         <v-text-field label="Фамилия" v-model="lastName" :rules="[lastNameRules.required, lastNameRules.regCheck]" required></v-text-field>
         <v-text-field label="Имя" v-model="firstName" :rules="[firstNameRules.required, firstNameRules.regCheck]"  required></v-text-field>
-        <v-select label="Подразделение" v-model="subDivision" :rules="[subDivisionRules.required]" :items="divisions" required autocomplete></v-select>
+        <v-select label="Подразделение" v-model="subDivision" :rules="[subDivisionRules.required]" :items="subDivisions" item-text="name" item-value="id" required autocomplete></v-select>
         <v-menu>
             <v-text-field slot="activator" label="Дата регистрации" v-model="registrationDate" append-icon="event" readonly></v-text-field>
             <v-date-picker v-model="registrationDate" no-title scrollable></v-date-picker>
@@ -24,20 +24,22 @@
             </v-card>
         </v-dialog>
     </v-form>
+    {{ realtor }}
+    {{ subDivisions }}
     </div>
 </template>
 
 <script>
+    import axios from 'axios'
     export default {
+        created() {
+            this.getSubDivisions();
+            this.getRealtor(this.$route.params.id)
+        },
         data:() => ({
-                divisions: [
-                    { value:1, text: 'Росич'},
-                    { value:2, text: 'Урал'},
-                    { value:3, text: 'Эдельвейс'},
-                    { value:4, text: 'Меркурий'},
-                    { value:5, text: 'Кузбасс'},
-
-                ],
+                subDivisions: [],
+                realtor: [],
+                errors: [],
                 dialog: false,
                 lastName: '',
                 firstName: '',
@@ -65,17 +67,32 @@
                     required: v => !!v || 'Укажите дату регистрации'
                 },
         }),
-        created() {
-            this.realtorsList.forEach(el => {
-                if(el.id==this.$route.params.id) {
-                    this.firstName = el.firstName;
-                    this.lastName = el.lastName;
-                    this.subDivision = el.subDivision;
-                    this.registrationDate = el.registrationDate;
-                }
-            })
-        },
         methods: {
+            getRealtor(idRealtor) {
+                axios.get('/api/Realtor/' + idRealtor)
+                .then(response => {
+                    let data = response.data
+                    this.realtor = data
+                    
+                    this.lastName = data.lastName,
+                    this.firstName = data.firstName,
+                    this.subDivision = data.subDivision,
+                    this.registrationDate = data.registrationDate.slice(0,10);
+                })
+                .catch(e => {
+                    this.errors.push(e)
+                })
+            },
+            getSubDivisions() {
+                axios.get('/api/SubDivision')
+                .then(response => {
+                    let data = response.data
+                    this.subDivisions = data
+                })
+                .catch(e => {
+                    this.errors.push(e)
+                })
+            },                
             submit() {
                 if (this.$refs.form.validate()){
                     this.$router.push('/')
@@ -89,9 +106,10 @@
                 this.$router.push('/')
             }
         },
-        computed: {
-            isOnlyWords() {
-                return /^[А-Яа-я]+$/.test(this.LastName)
+        filters: {
+            dateFormat: function (value) {
+                if (!value) return ''
+                return new Date(value).toLocaleDateString()
             }
         }
 

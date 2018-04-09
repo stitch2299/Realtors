@@ -39,21 +39,22 @@ namespace Realtors.Controllers
                                 }).ToListAsync();
 
             return Ok(result);
-
         }
 
-        // GET: api/Realtor/5
-        [HttpGet("{id}", Name = "Get")]
-        public string Get(int id)
+        [HttpGet("{id}", Name = "GetRealtor")]
+        public async Task<IActionResult> GetRealtor(int id)
         {
-            return "value";
+            var result = await _context.Realtors.SingleOrDefaultAsync(x => x.Id == id);
+
+            return Ok(result);
         }
         
         [HttpPost]
-        public async Task<IActionResult> SaveRealtor([FromBody]string value)
+        public async Task<IActionResult> SaveRealtor([FromBody]Realtor value)
         {
-            var result = await _context.AddAsync(value);
-            return Ok(result);
+            _context.Realtors.Add(value);
+            await _context.SaveChangesAsync();
+            return Ok();
         }
         
         // PUT: api/Realtor/5

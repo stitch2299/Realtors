@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace Realtors.Models
 {
+    [Serializable]
     [Table("realtors")]
     public class Realtor
     {

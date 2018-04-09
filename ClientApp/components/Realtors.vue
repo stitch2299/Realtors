@@ -59,7 +59,7 @@
 
             },
             getTable() {
-                axios.get('api/Realtor')
+                axios.get('/api/Realtor')
                 .then(response => {
                     let data = response.data
                     this.realtorsList = data

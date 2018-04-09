@@ -3,7 +3,7 @@
     <v-form class="new-form" ref="form" >
         <v-text-field label="Фамилия" v-model="lastName" :rules="[lastNameRules.required, lastNameRules.regCheck]" required></v-text-field>
         <v-text-field label="Имя" v-model="firstName" :rules="[firstNameRules.required, firstNameRules.regCheck]" required></v-text-field>
-        <v-select label="Подразделение" v-model="subDivision" :rules="[subDivisionRules.required]" :items="subDivisions" item-text="name" item-value="id" autocomplete required></v-select>
+        <v-select v-model="subDivision" label="Подразделение" :rules="[subDivisionRules.required]" :items="subDivisions" item-text="name" item-value="id" autocomplete required></v-select>
         <v-menu>
             <v-text-field slot="activator" label="Дата регистрации" v-model="registrationDate" append-icon="event" readonly></v-text-field>
             <v-date-picker locale="Cyrl" v-model="registrationDate" no-title scrollable></v-date-picker>
@@ -13,6 +13,7 @@
             <v-btn @click="cancel">Отмена</v-btn>
         </v-layout>
     </v-form>
+    {{ this.subDivision }}
     </div>
 </template>
 
@@ -25,15 +26,16 @@
         data:() => ({
             lastName: '',
             firstName: '',
+            subDivision: '',
             registrationDate: '',
             subDivisions: [],
-            subDivision: '',
             postBody: {
-                lastName: '',
-                firstName: '',
-                subDivision: '',
-                registrationDate: ''
+                LastName: '',
+                FirstName: '',
+                SubDivision: Number,
+                RegistrationDate: new Date()
             },
+            Realtor: [],
             errors: [],
             lastNameRules: {
                 required: v => !!v || 'Укажите фамилию',
@@ -58,13 +60,13 @@
         }),
         methods: {
             addRealtor() {
-                this.postBody.lastName = this.lastName,
-                this.postBody.firstName = this.firstName,
-                this.postBody.subDivision = this.subDivision,
-                this.postBody.registrationDate = new Date(this.registrationDate)
-                let str = JSON.stringify(this.postBody)
-                
-                axios.post('api/Realtor', { body: str })
+                this.postBody.LastName = this.lastName
+                this.postBody.FirstName = this.firstName
+                this.postBody.SubDivision = this.subDivision
+                this.postBody.RegistrationDate = new Date(this.registrationDate)
+                var value = this.postBody
+                console.log(value)
+                axios.post('api/Realtor', value)
                 .then(response => {})
                 .catch(e => {
                     this.errors.push(e)
@@ -75,7 +77,7 @@
                 this.$router.push('/')
             },
             getSubDivisions() {
-                axios.get('api/SubDivision')
+                axios.get('/api/SubDivision')
                 .then(response => {
                     let data = response.data
                     this.subDivisions = data
@@ -84,13 +86,6 @@
                     this.errors.push(e)
                 })                
             },
-            getSubDivisionId () {
-                for(var key in this.subDivisions) {
-                    if(this.subDivision == this.subDivisions[key].name) {
-                        this.postBody.subDivision = this.subDivisions[key].id
-                    }
-                }
-            }
         },
     }
 </script>
