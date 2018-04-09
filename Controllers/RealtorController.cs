@@ -59,14 +59,21 @@ namespace Realtors.Controllers
         
         // PUT: api/Realtor/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
+        public async Task<IActionResult> UpdateRealtor([FromBody]Realtor value)
         {
+            _context.Realtors.Update(value);
+            await _context.SaveChangesAsync();
+            return Ok();
         }
-        
+
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<IActionResult> DeleteRealtor(int id)
         {
+            var itemToRemove = await _context.Realtors.SingleOrDefaultAsync(x => x.Id == id);
+            _context.Realtors.Remove(itemToRemove);
+            await _context.SaveChangesAsync();
+            return Ok();
         }
     }
 }

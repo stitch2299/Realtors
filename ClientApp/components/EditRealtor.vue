@@ -10,7 +10,7 @@
         </v-menu>
         <v-layout justify-space-between >
             <!-- <v-date-picker v-model="registrationDate" year-icon="mdi-calendar-blank" prev-icon="mdi-skip-previous" next-icon="mdi-skip-next" first-day-of-week=1 ></v-date-picker> -->
-            <v-btn @click="submit" color="success">Сохранить изменения</v-btn>
+            <v-btn @click="saveChanges($route.params.id)" color="success">Сохранить изменения</v-btn>
             <v-btn color="error" dark @click.stop="dialog=true">Удалить риэлтора</v-btn>
         </v-layout>
         <v-dialog v-model="dialog" max-width="500px">
@@ -18,14 +18,12 @@
                 <v-card-title>Данное действие необратимо. Вы уверены, что хотите удалить запись о выбранном риэлторе?
                 </v-card-title>
                 <v-card-text>
-                    <v-btn color="primary" @click.stop="confirmDelete" dark>Уверен</v-btn>
+                    <v-btn color="primary" @click.stop="confirmDelete($route.params.id)" dark>Уверен</v-btn>
                     <v-btn color="error" @click.stop="cancelDelete">Нет</v-btn>
                 </v-card-text>
             </v-card>
         </v-dialog>
     </v-form>
-    {{ realtor }}
-    {{ subDivisions }}
     </div>
 </template>
 
@@ -93,17 +91,30 @@
                     this.errors.push(e)
                 })
             },                
-            submit() {
-                if (this.$refs.form.validate()){
+            saveChanges(idRealtor) {
+                this.realtor.lastName = this.lastName,
+                this.realtor.firstName = this.firstName,
+                this.realtor.subDivision = this.subDivision,
+                this.realtor.registrationDate = new Date(this.registrationDate)
+                axios.put('/api/Realtor/' + idRealtor, this.realtor)
+                .then(response => {
                     this.$router.push('/')
-                }
+                })
+                .catch(e => {
+                    this.errors.push(e)
+                })
             },
             cancelDelete () {
                 this.dialog=false;
             },
-            confirmDelete () {
-                this.dialog=false;
-                this.$router.push('/')
+            confirmDelete (idRealtor) {
+                axios.delete('/api/Realtor/' + idRealtor)
+                .then(response => {
+                    this.$router.push('/')
+                })
+                .catch(e => {
+                    this.errors.push(e)
+                })
             }
         },
         filters: {

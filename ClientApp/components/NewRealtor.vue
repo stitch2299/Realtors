@@ -13,7 +13,6 @@
             <v-btn @click="cancel">Отмена</v-btn>
         </v-layout>
     </v-form>
-    {{ this.subDivision }}
     </div>
 </template>
 
@@ -65,7 +64,6 @@
                 this.postBody.SubDivision = this.subDivision
                 this.postBody.RegistrationDate = new Date(this.registrationDate)
                 var value = this.postBody
-                console.log(value)
                 axios.post('api/Realtor', value)
                 .then(response => {})
                 .catch(e => {
