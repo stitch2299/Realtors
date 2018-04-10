@@ -47,14 +47,14 @@
                 lastNameRules: {
                     required: v => !!v || 'Укажите фамилию',
                     regCheck: v => {
-                        const pattern = /^[а-яА-Яa-zA-Z ]*$/
+                        const pattern = /^[а-яА-Яa-zA-ZёЁ ]*$/
                         return !!v && pattern.test(v)  || 'Фамилия содержит недопустимые символы'
                     }
                 },
                 firstNameRules: {
                     required: v => !!v || 'Укажите имя',
                     regCheck: v => {
-                        const pattern = /^[а-яА-Яa-zA-Z ]*$/
+                        const pattern = /^[а-яА-Яa-zA-ZёЁ ]*$/
                         return !!v && pattern.test(v)  || 'Имя содержит недопустимые символы'
                     }
                 },
