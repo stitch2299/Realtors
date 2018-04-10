@@ -41,11 +41,25 @@ namespace Realtors.Controllers
             return Ok(result);
         }
 
+        [Route("/GetDateInterval")]
+        [HttpGet]
+        public async Task<IActionResult> GetDateInterval()
+        {
+            var result = await (from realtor in _context.Realtors
+                                group realtor by true into r
+                                select new
+                                {
+                                    min = r.Min(z => z.RegistrationDate),
+                                    max = r.Max(z => z.RegistrationDate)
+                                }).ToListAsync();;
+            return Ok(result);
+        }
+
+
         [HttpGet("{id}", Name = "GetRealtor")]
         public async Task<IActionResult> GetRealtor(int id)
         {
             var result = await _context.Realtors.SingleOrDefaultAsync(x => x.Id == id);
-
             return Ok(result);
         }
         

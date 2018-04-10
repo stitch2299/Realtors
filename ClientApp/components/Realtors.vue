@@ -1,7 +1,18 @@
 <template>
     <div>
-        <v-text-field v-model="search" class="lastNameFilter" name="lastNameFilter" label="Отфильтровать по фамилии:"></v-text-field>
-        <v-data-table :items="realtorsList" :headers="headers" :search="search" class="elevation-1" :custom-filter="customFilter" disable-initial-sort>
+        <v-card>
+            <v-card-title>
+                <v-layout>
+                <v-flex xs3>
+                    <v-text-field class="v-text-field-filter-by-lastname" append-icon="search" v-model="search" single-line hide-details name="lastNameFilter" label="Фильтр по фамилии:"></v-text-field>
+                </v-flex>
+                <v-flex>
+                    <el-date-picker style="float:right" v-model="dateInterval" type="datetimerange" format="dd.MM.yyyy" range-separator="до" start-placeholder="Начало" end-placeholder="Конец" :clearable="false">
+                    </el-date-picker>
+                </v-flex>
+                </v-layout>
+            </v-card-title>
+        <v-data-table :items="realtorsList" :headers="headers" :filter="filter" :search="search" class="elevation-1" :custom-filter="customFilter" disable-initial-sort>
         <tr slot="items" slot-scope="props" @dblclick="edit(props.item.id)">
             <td> {{ props.item.id }} </td>
             <td> {{ props.item.guid }} </td>
@@ -11,7 +22,8 @@
             <td> {{ props.item.registrationDate | dateFormat }} </td>
         </tr>
         </v-data-table>
-        <div></div>
+        </v-card>
+        {{ dateInterval }}
     </div>
 </template>
 
@@ -20,15 +32,18 @@
     export default {
         created() {
             this.getTable()
+            this.getDateInterval(this.dateInterval)
         },
         data() {
             return {
                 realtorsList: [],
                 buttonText: 'Скрыть', 
                 realtorsShow: true,
-                search: '',
+                searchString: '',
+                search: [],
                 test: [],
                 errors: [],
+                dateInterval: [],
                 headers: [
                     { text: 'Id', sortable: false },
                     { text: 'Guid', sortable: false },
@@ -36,7 +51,7 @@
                     { text: 'Имя', sortable: false },
                     { text: 'Подразделение', sortable: false },
                     { text: 'Дата регистрации', sortable: false }
-                ],
+                ],                
             }   
         },
         methods: {
@@ -54,9 +69,14 @@
                 this.$router.push('/edit/' + id)
             },
             customFilter(items, search, filter) {
-                search = search.toString().toLowerCase()
-                return items.filter(row => filter(row["lastName"], search));
-
+                return items.filter(row => filter(row["lastName"], new Date(row["registrationDate"]), search, this.dateInterval ))
+                    
+            },
+            filter(val1, val2, search, dateInterval) {
+                if(!search) {
+                    return val1 != null && typeof val1 !== 'boolean' && (dateInterval[0] <= val2) && (val2 <= dateInterval[1])
+                }
+                return val1 != null && typeof val1 !== 'boolean' && (val1.toString().toLowerCase().indexOf(search) !== -1) && (dateInterval[0] <= val2) && (val2 <= dateInterval[1])
             },
             getTable() {
                 axios.get('/api/Realtor')
@@ -68,15 +88,32 @@
                     this.errors.push(e)
                 })
             },
+            getDateInterval() {
+                axios.get('/GetDateInterval')
+                .then(response => {
+                    let data = response.data[0]
+                    this.dateInterval.push(new Date(data['min']))
+                    this.dateInterval.push(new Date(data['max']))
+                })
+                .catch(e => {
+                    this.errors.push(e)
+                })
+            }
         },
         filters: {
             dateFormat: function (value) {
                 if (!value) return ''
                 return new Date(value).toLocaleDateString()
             }
-        }
+        },
     }
 </script>
 
-<style scoped>
+<style>
+    .v-text-field-filter-by-lastname {
+        padding:0px;
+    }
+    .v-text-field-filter-by-lastname label {
+        top: 0px;
+    }
 </style>

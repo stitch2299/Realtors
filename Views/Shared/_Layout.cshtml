@@ -8,6 +8,7 @@
 
     <link rel="stylesheet" href="~/dist/vendor.css" asp-append-version="true" />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
     <environment names="Staging,Production">
         <link rel="stylesheet" href="~/dist/site.css" asp-append-version="true" />
     </environment>
@@ -17,6 +18,7 @@
     @RenderBody()
 
     <script src="~/dist/vendor.js" asp-append-version="true"></script>
+
     @RenderSection("scripts", required: false)
 </body>
 
