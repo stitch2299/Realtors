@@ -13,10 +13,9 @@ import EditRealtor from './EditRealtor'
 import NewRealtor from './NewRealtor'
 
 export default {
-    data() { 
-        return {
-        }
-    },
+    data: () => ({ 
+
+    }),
     methods: {
 
     },

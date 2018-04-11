@@ -1,29 +1,33 @@
 <template>
     <div>
-    <v-form ref="form">
-        <v-text-field label="Фамилия" v-model="lastName" :rules="[lastNameRules.required, lastNameRules.regCheck]" required></v-text-field>
-        <v-text-field label="Имя" v-model="firstName" :rules="[firstNameRules.required, firstNameRules.regCheck]"  required></v-text-field>
-        <v-select label="Подразделение" v-model="subDivision" :rules="[subDivisionRules.required]" :items="subDivisions" item-text="name" item-value="id" required autocomplete></v-select>
-        <v-menu>
-            <v-text-field slot="activator" label="Дата регистрации" v-model="registrationDate" append-icon="event" readonly></v-text-field>
-            <v-date-picker v-model="registrationDate" no-title scrollable></v-date-picker>
-        </v-menu>
-        <v-layout justify-space-between >
-            <!-- <v-date-picker v-model="registrationDate" year-icon="mdi-calendar-blank" prev-icon="mdi-skip-previous" next-icon="mdi-skip-next" first-day-of-week=1 ></v-date-picker> -->
-            <v-btn @click="saveChanges($route.params.id)" color="success">Сохранить изменения</v-btn>
-            <v-btn color="error" dark @click.stop="dialog=true">Удалить риэлтора</v-btn>
-        </v-layout>
-        <v-dialog v-model="dialog" max-width="500px">
+        <v-form v-model="valid" ref="form" class="new-form" validation>
+            <v-text-field label="Фамилия" v-model="lastName" :rules="[lastNameRules.required, lastNameRules.regCheck]" required></v-text-field>
+            <v-text-field label="Имя" v-model="firstName" :rules="[firstNameRules.required, firstNameRules.regCheck]" required></v-text-field>
+            <v-select label="Подразделение" v-model="subDivision" :rules="[subDivisionRules.required]" :items="subDivisions" 
+            item-text="name" item-value="id" autocomplete required></v-select>
+            <v-menu ref="menu" lazy :close-on-content-click="false" v-model="menu" transition="scale-transition" offset-y full-width
+            :nudge-right="40" max-width="290px" min-width="290px" :return-value.sync="registrationDate">
+                <v-text-field slot="activator" label="Дата регистрации" v-model="registrationDate" append-icon="event" readonly></v-text-field>
+                <v-date-picker locale="Cyrl" v-model="registrationDate" no-title scrollable></v-date-picker>
+                <v-spacer></v-spacer>
+                <v-btn flat color="primary" @click="menu = false">Отмена</v-btn>
+                <v-btn flat color="primary" style="float:right" @click="$refs.menu.save(registrationDate)">ОК</v-btn>
+            </v-menu>
+            <v-layout justify-space-between >
+                <v-btn @click="saveChanges($route.params.id)" color="success">Сохранить изменения</v-btn>
+                <v-btn color="error" dark @click.stop="dialog=true">Удалить риэлтора</v-btn>
+            </v-layout>
+            <v-dialog v-model="dialog" max-width="500px">
             <v-card>
                 <v-card-title>Данное действие необратимо. Вы уверены, что хотите удалить запись о выбранном риэлторе?
                 </v-card-title>
                 <v-card-text>
                     <v-btn color="primary" @click.stop="confirmDelete($route.params.id)" dark>Уверен</v-btn>
-                    <v-btn color="error" @click.stop="cancelDelete">Нет</v-btn>
+                    <v-btn color="error" @click.stop="dialog=false">Нет</v-btn>
                 </v-card-text>
             </v-card>
-        </v-dialog>
-    </v-form>
+            </v-dialog>
+        </v-form>
     </div>
 </template>
 
@@ -35,35 +39,44 @@
             this.getRealtor(this.$route.params.id)
         },
         data:() => ({
-                subDivisions: [],
-                realtor: [],
-                errors: [],
-                dialog: false,
-                lastName: '',
-                firstName: '',
-                subDivision: '',
-                registrationDate: '',
-
-                lastNameRules: {
-                    required: v => !!v || 'Укажите фамилию',
-                    regCheck: v => {
-                        const pattern = /^[а-яА-Яa-zA-ZёЁ ]*$/
-                        return !!v && pattern.test(v)  || 'Фамилия содержит недопустимые символы'
-                    }
-                },
-                firstNameRules: {
-                    required: v => !!v || 'Укажите имя',
-                    regCheck: v => {
-                        const pattern = /^[а-яА-Яa-zA-ZёЁ ]*$/
-                        return !!v && pattern.test(v)  || 'Имя содержит недопустимые символы'
-                    }
-                },
-                subDivisionRules: {
-                    required: v => !!v || 'Выберите подразделение'
-                },
-                registrationDateRules: {
-                    required: v => !!v || 'Укажите дату регистрации'
-                },
+            subDivisions: [],
+            realtor: [],
+            errors: [],
+            menu: false,
+            valid : true,
+            dialog: false,
+            lastName: '',
+            firstName: '',
+            subDivision: '',
+            registrationDate: '',
+            lastNameRules: {
+                required: v => !!v ||
+                    'Укажите фамилию',
+                regCheck: v => {
+                    const pattern = /^[а-яА-Яa-zA-ZёЁ ]*$/
+                    return !!v && 
+                        pattern.test(v)  ||
+                        'Фамилия содержит недопустимые символы'
+                }
+            },
+            firstNameRules: {
+                required: v => !!v ||
+                    'Укажите имя',
+                regCheck: v => {
+                    const pattern = /^[а-яА-Яa-zA-ZёЁ ]*$/
+                    return !!v &&
+                        pattern.test(v)  ||
+                        'Имя содержит недопустимые символы'
+                }
+            },
+            subDivisionRules: {
+                required: v => !!v ||
+                'Выберите подразделение'
+            },
+            registrationDateRules: {
+                required: v => !!v ||
+                'Укажите дату регистрации'
+            }
         }),
         methods: {
             getRealtor(idRealtor) {
@@ -71,7 +84,6 @@
                 .then(response => {
                     let data = response.data
                     this.realtor = data
-                    
                     this.lastName = data.lastName,
                     this.firstName = data.firstName,
                     this.subDivision = data.subDivision,
@@ -103,9 +115,6 @@
                 .catch(e => {
                     this.errors.push(e)
                 })
-            },
-            cancelDelete () {
-                this.dialog=false;
             },
             confirmDelete (idRealtor) {
                 axios.delete('/api/Realtor/' + idRealtor)

@@ -5,15 +5,11 @@
         <v-toolbar-items class="hidden-sm-and-down">
         <v-btn flat @click="toList">Список</v-btn>
         <v-btn flat @click="toNew">Новый</v-btn>
-        
-        
         <v-flex xs8>
-        <v-text-field v-model="searchString" name="search" label="Поиск" id="searching" ></v-text-field>
+            <v-text-field @keyup.enter="toSearch" v-model="searchString" name="search" label="Поиск" id="searching" ></v-text-field>
         </v-flex>
         <v-btn @click="toSearch" flat>Искать
         </v-btn>
-        
-
         </v-toolbar-items>
     </v-toolbar> 
 </template>
@@ -36,6 +32,7 @@
             },
             toSearch() {
                 this.$router.push('/search/' + this.searchString)
+                this.searchString = ''
             }
         }
     }

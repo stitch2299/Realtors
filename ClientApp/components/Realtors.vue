@@ -1,29 +1,31 @@
 <template>
     <div>
-        <v-card>
+        <v-card @test="test1">
             <v-card-title>
                 <v-layout>
                 <v-flex xs3>
-                    <v-text-field class="v-text-field-filter-by-lastname" append-icon="search" v-model="lastNameFilter" single-line hide-details name="lastNameFilter" label="Фильтр по фамилии:"></v-text-field>
+                    <v-text-field class="v-text-field-filter-by-lastname" append-icon="search" v-model="lastNameFilter" 
+                    single-line hide-details name="lastNameFilter" label="Фильтр по фамилии:"></v-text-field>
                 </v-flex>
                 <v-flex>
-                    <el-date-picker style="float:right" v-model="dates" type="daterange" format="dd.MM.yyyy" range-separator="до" start-placeholder="Начало" end-placeholder="Конец" >
+                    <el-date-picker style="float:right" v-model="dates" type="daterange" format="dd.MM.yyyy" range-separator="до" 
+                    start-placeholder="Начало" end-placeholder="Конец" >
                     </el-date-picker>
                 </v-flex>
                 </v-layout>
             </v-card-title>
-        <v-data-table :items="realtorsList" :headers="headers" :filter="filter" :search="lastNameFilter" class="elevation-1" :custom-filter="customFilter" disable-initial-sort>
-        <tr slot="items" slot-scope="props" @dblclick="edit(props.item.id)">
-            <td> {{ props.item.id }} </td>
-            <td> {{ props.item.guid }} </td>
-            <td> {{ props.item.lastName }} </td>
-            <td> {{ props.item.firstName }} </td>
-            <td> {{ props.item.subDivision }} </td>
-            <td> {{ props.item.registrationDate | dateFormat }} </td>
-        </tr>
-        </v-data-table>
+            <v-data-table :items="realtorsList" :headers="headers" :filter="filter" :search="lastNameFilter" class="elevation-1" 
+            :custom-filter="customFilter" disable-initial-sort>
+            <tr slot="items" slot-scope="props" @dblclick="edit(props.item.id)">
+                <td> {{ props.item.id }} </td>
+                <td> {{ props.item.guid }} </td>
+                <td> {{ props.item.lastName }} </td>
+                <td> {{ props.item.firstName }} </td>
+                <td> {{ props.item.subDivision }} </td>
+                <td> {{ props.item.registrationDate | dateFormat }} </td>
+            </tr>
+            </v-data-table>
         </v-card>
-        {{ dateInterval }}
     </div>
 </template>
 
@@ -34,16 +36,12 @@
             this.getTable()
             // this.getDateInterval(this.dateInterval)
         },
-        data() {
-            return {
+        data: () => ({
                 realtorsList: [],
-                test1: '',
-                test2: '',
                 buttonText: 'Скрыть', 
                 realtorsShow: true,
                 searchString: '',
                 lastNameFilter: '',
-                test: [],
                 errors: [],
                 dateInterval: [ null, null ],
                 headers: [
@@ -53,9 +51,8 @@
                     { text: 'Имя', sortable: false },
                     { text: 'Подразделение', sortable: false },
                     { text: 'Дата регистрации', sortable: false }
-                ],                
-            }   
-        },
+                ],                 
+        }),
         computed: {
             dates: {
                 get: function()  {
@@ -77,32 +74,30 @@
             }
         },
         methods: {
-            toggleTable() {
-                if(this.realtorsShow){
-                    this.buttonText = 'Показать';
-                    this.realtorsShow = false;
-                }
-                else {
-                    this.buttonText = 'Скрыть';
-                    this.realtorsShow = true;
-                }
-            },
             edit(id) {
                 this.$router.push('/edit/' + id)
             },
             
             customFilter(items, search, filter) {
-                return items.filter(row => filter(row["lastName"], row["firstName"], row["subDivision"], new Date(row["registrationDate"]), this.search, this.lastNameFilter, this.dateInterval ))
+                return items.filter(row => filter(
+                    row["lastName"], 
+                    row["firstName"], 
+                    row["subDivision"], 
+                    new Date(row["registrationDate"]), 
+                    this.search, 
+                    this.lastNameFilter, 
+                    this.dateInterval ))
             },
             filter(lastName, firstName, subDivision, registrationDate, searchString, lastNameFilter, dateInterval) {
-                if(lastName.toLowerCase().includes(lastNameFilter.toLowerCase()) && this.checkDate(dateInterval, registrationDate) &&
+                if(lastName.toLowerCase().includes(lastNameFilter.toLowerCase()) && 
+                    this.checkDate(dateInterval, registrationDate) &&
                     this.checkSearch(lastName, firstName, subDivision, searchString))
                     return true
             },
-
             checkDate(dateInterval, registrationDate) {
                 if(dateInterval[0] != null && dateInterval[1] != null) {
-                    return dateInterval[0] <= registrationDate && dateInterval[1] >= registrationDate
+                    return dateInterval[0] <= registrationDate && 
+                        dateInterval[1] >= registrationDate
                 }
                 return true
             },
@@ -114,50 +109,6 @@
                 }
                 return true
             },
-            
-            // customFilter(items, search, filter) {
-            //     return items.filter(row => filter(row["lastName"], row["firstName"], row["subDivision"], new Date(row["registrationDate"]), search, this.dateInterval, this.searchString ))
-                    
-            // },
-            
-
-            // filter(val1, val2, val3, val4, search, dateInterval, searchString) {
-            //     if(!search) 
-                // searchString = this.$route.params.searchString
-                // if(!search && !searchString) {
-                //     console.log('search 1')
-                //     return (dateInterval[0] <= val4) 
-                //     && (val4 <= dateInterval[1])
-
-                // }
-                // if(search && !searchString) {
-                //     console.log('search 2')
-                //     return (val1.toString().toLowerCase().indexOf(search) !== -1) 
-                //     && (dateInterval[0] <= val4) 
-                //     && (val4 <= dateInterval[1])
-
-                // }
-                // if(!search && searchString) {
-                //     console.log('search 3')
-                //     return (val1.toString().toLowerCase().indexOf(searchString) !== -1)
-                //     || (val2.toString().toLowerCase().indexOf(searchString) !== -1)
-                //     || (val3.toString().toLowerCase().indexOf(searchString) !== -1)
-                //     && (dateInterval[0] <= val4)
-                //     && (val4 <= dateInterval[1])
-
-                // }
-                // if(search && searchString) {
-                //     console.log('search 4')
-                //     return (val1.toString().toLowerCase().indexOf(search) !== -1) && (val1.toString().toLowerCase().indexOf(searchString) !== -1)
-                //     || (val2.toString().toLowerCase().indexOf(searchString) !== -1)
-                //     || (val3.toString().toLowerCase().indexOf(searchString) !== -1)
-                //     && (dateInterval[0] <= val4)
-                //     && (val4 <= dateInterval[1])
-                // }
-                // console.log('not search')
-            // },
-            
-
             getTable() {
                 axios.get('/api/Realtor')
                 .then(response => {
@@ -178,6 +129,9 @@
                 .catch(e => {
                     this.errors.push(e)
                 })
+            },
+            test1() {
+                console.log('пиймав')
             }
         },
         filters: {

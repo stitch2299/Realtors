@@ -21,7 +21,6 @@ namespace Realtors.Controllers
             _context = context;
         }
 
-        // GET: api/Realtor
         [HttpGet]
         public async Task<IActionResult> GetTable()
         {
@@ -71,7 +70,6 @@ namespace Realtors.Controllers
             return Ok();
         }
         
-        // PUT: api/Realtor/5
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateRealtor([FromBody]Realtor value)
         {
@@ -80,7 +78,6 @@ namespace Realtors.Controllers
             return Ok();
         }
 
-        // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteRealtor(int id)
         {

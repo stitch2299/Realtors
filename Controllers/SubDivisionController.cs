@@ -25,7 +25,6 @@ namespace Realtors.Controllers
         public async Task<IActionResult> GetTable()
         {
             var result = await _context.SubDivisions.Select(x => new { x.Id, x.Name }).ToListAsync();
-
             return Ok(result);
 
         }
